@@ -1,0 +1,373 @@
+/* Layout */
+.app {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(90deg, rgba(103,58,180,1) 0%, rgba(29,195,253,1) 54%, rgba(103,58,180,1) 100%);
+  color: white;
+  font-family: "Segoe UI", Arial, sans-serif;
+  flex-direction: column;
+  border
+}
+hr{
+  width: 170px;
+  
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100%;
+  /* 🎨 Sidebar background */
+  padding: 20px;
+  border-right: 2px solid black; 
+  color: white;
+  
+}
+.app .sidebar {
+  border: black 2px solid;
+  background: rgb(103,58,180);
+  background-size: cover;
+
+
+}
+
+
+.sidebar h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+
+  padding: 0;
+}
+.app .sidebar .sidebar-menu li:hover{
+  color:  white;
+  background: rgb(36, 0, 70);
+  border: #c022c0 100px;
+}
+    
+
+
+
+.sidebar li {
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.sidebar li:hover {
+  background: #0072ff;
+  color: white;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 240px;
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  padding-bottom: 120px; /* space for bottom player */
+  border: black;
+}
+
+/* Gradient Page Header */
+.main-content h2 {
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Search */
+.search-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+::placeholder{
+  color: white;
+}
+
+.search-bar {
+  width: 70%;
+  padding: 10px 15px;
+  border: 10px solid black;
+  border-radius: 20px;
+  font-size: 16px;
+  margin-right: 10px;
+  outline: none;
+}
+
+.search-bar:focus {
+  border-color:rgb(36, 0, 70);
+}
+
+.search-section button {
+  background: #0072ff;
+  padding: 8px 15px;
+  border-radius: 20px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.search-section input{
+  background: white;
+  color: rgb(36, 0, 70);
+  font-size: 16px;
+}
+
+.search-section button:hover {
+  background: #005ad4;
+}
+
+/* Recent searches dropdown */
+.recent-searches {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  color: #333;
+}
+
+.recent-searches ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.recent-searches li {
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.recent-searches li:hover {
+  background: #f0f0f0;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+/* Songs Grid */
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.song-card {
+  background: #fcefe3;   /* 🎨 new card color */
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.song-card:hover {
+  background: #0c15b9;   /* 🎨 hover effect */
+}
+
+/* Base style for buttons inside card-buttons */
+.card-buttons button {
+  margin: 0 5px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+/* Play button style */
+.card-buttons button:first-child {
+  background: #007bff;
+  color: white;
+}
+.card-buttons button:first-child:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Add button (green) */
+.add-btn {
+  background: #28a745;
+  color: white;
+}
+.add-btn:hover {
+  background: #1e7e34;
+  transform: scale(1.05);
+}
+
+/* Remove button (red) */
+.remove-btn {
+  background: #dc3545;
+  color: white;
+}
+.remove-btn:hover {
+  background: #a71d2a;
+  transform: scale(1.05);
+}
+
+/* Playlist View */
+.playlist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.playlist-item {
+  background: white;
+  padding: 12px 15px;
+  border-radius: 12px;
+  display: flex;
+  color: black
+  ;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.playlist-item:hover {
+  background: rgb(137, 196, 255);
+  color: rgb(0, 0, 0);
+}
+
+
+/* Local MP3 Library (List View) */
+.local-mp3-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.local-mp3-item {
+  padding: 10px 15px;
+  background: white;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
+  font-size: 15px;
+}
+
+.local-mp3-item:hover {
+  background: rgb(137, 196, 255);
+}
+
+/* Bottom Player */
+.bottom-player {
+  position: fixed;
+  bottom: 0;
+  left: 240px;
+  right: 0;
+  height: 100px;
+  background: black;
+  border-top: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  gap: 20px;
+  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.1);
+  color:  white;
+}
+
+.bottom-player img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+}
+
+.song-info {
+  flex: 1;
+}
+
+.song-info h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.song-info p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Controls */
+.controls button {
+  margin: 0 6px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  background: #0072ff;
+}
+
+.controls button:hover {
+  background: #005ad4;
+}
+
+/* Progress Bar */
+.progress-bar input {
+  width: 250px;
+  appearance: none;
+  height: 6px;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.progress-bar input::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #0072ff;
+  cursor: pointer;
+}
+
+.volume-control input {
+  width: 100px;
+  appearance: none;
+  height: 6px;
+  background: #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.volume-control input::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #0072ff;
+  cursor: pointer;
+}
+
+.volume-control input::-webkit-slider-thumb:hover {
+  background: #005ad4;
+}
+
+

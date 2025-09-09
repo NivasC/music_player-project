@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 
@@ -20,25 +21,17 @@ function App() {
   const songs = [
     {
       id: 1,
-      title: "Bol Do Na Zara",
-      artist: "Armaan Malik",
-      genre: "Romantic",
-      duration: "4:32",
-      image: "https://i.scdn.co/image/ab67616d0000b273d45f4db15bf95dc2da233c78",
-      audio: "https://pagalworld.com.se/files/download/id/646",
+      title: "Thuli Thuli BGM",
+      artist: "Yuvan Shankar Raja",
+      genre: "Love BGM",
+      duration: "2:45",
+      image:
+        "https://m.media-amazon.com/images/M/MV5BZmM3NDRlNjgtN2VlNy00OGQyLWI1NGItMjk2ZjM1YmQ2ZTdmXkEyXkFqcGc@._V1_.jpg",
+      audio: "https://pagalworld.com.se/files/download/id/1464",
     },
-    {
-      id: 2,
-      title: "Chaleya",
-      artist: "Arijit Singh",
-      genre: "Romantic",
-      duration: "7:05",
-      image: "https://i.scdn.co/image/ab67616d0000b2731f0bb9d93926ab9dd98ec605",
-      audio: "https://pagalworld.com.se/files/download/id/1446",
-    },
+    // ... rest of your songs (2-10)
   ];
 
-  // Add or remove song from playlist
   const togglePlaylist = (song) => {
     if (playlist.find((s) => s.id === song.id)) {
       setPlaylist(playlist.filter((s) => s.id !== song.id));
@@ -47,7 +40,6 @@ function App() {
     }
   };
 
-  // 🔎 Handle search (Local + Online)
   const handleSearch = async () => {
     if (!searchQuery) return;
 
@@ -91,7 +83,6 @@ function App() {
 
   const clearHistory = () => setRecentSearches([]);
 
-  // Local file uploads
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
     const newSongs = files.map((file, index) => ({
@@ -105,13 +96,11 @@ function App() {
     setLibrarySongs([...librarySongs, ...newSongs]);
   };
 
-  // Play song
   const playSong = (songList, index) => {
     setCurrentSongIndex({ list: songList, index });
     setIsPlaying(true);
   };
 
-  // Next & Previous
   const playNext = () => {
     if (!currentSongIndex) return;
     const { list, index } = currentSongIndex;
@@ -128,7 +117,6 @@ function App() {
     setIsPlaying(true);
   };
 
-  // Play / Pause
   const togglePlayPause = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -139,7 +127,6 @@ function App() {
     setIsPlaying(!isPlaying);
   };
 
-  // Volume
   const handleVolumeChange = (e) => {
     const newVolume = e.target.value;
     setVolume(newVolume);
@@ -148,7 +135,6 @@ function App() {
     }
   };
 
-  // Progress + Time Updates
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -163,14 +149,12 @@ function App() {
     return () => audio.removeEventListener("timeupdate", updateProgress);
   }, [currentSongIndex]);
 
-  // Seek
   const handleSeek = (e) => {
     const newTime = (e.target.value / 100) * audioRef.current.duration;
     audioRef.current.currentTime = newTime;
     setProgress(e.target.value);
   };
 
-  // Format seconds -> mm:ss
   const formatTime = (secs) => {
     if (isNaN(secs)) return "0:00";
     const minutes = Math.floor(secs / 60);
@@ -181,34 +165,94 @@ function App() {
   const currentSong =
     currentSongIndex && currentSongIndex.list[currentSongIndex.index];
 
+  // 🎹 Keyboard shortcuts (space works in search now)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (tag === "input" || tag === "textarea") return; // Ignore typing
+      if (!currentSong) return;
+
+      switch (e.key.toLowerCase()) {
+        case " ":
+          e.preventDefault();
+          togglePlayPause();
+          break;
+        case "arrowright":
+          playNext();
+          break;
+        case "arrowleft":
+          playPrevious();
+          break;
+        case "arrowup":
+          setVolume((v) => {
+            const newV = Math.min(1, v + 0.1);
+            if (audioRef.current) audioRef.current.volume = newV;
+            return newV;
+          });
+          break;
+        case "arrowdown":
+          setVolume((v) => {
+            const newV = Math.max(0, v - 0.1);
+            if (audioRef.current) audioRef.current.volume = newV;
+            return newV;
+          });
+          break;
+        default:
+          break;
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentSong, isPlaying]);
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.play().catch((err) =>
+        console.warn("Autoplay blocked, user interaction needed:", err)
+      );
+    } else {
+      audioRef.current.pause();
+    }
+  }, [isPlaying, currentSong]);
+
   const renderSongs = (list, source) => (
     <div className={source === "playlist" ? "playlist-list" : "songs-grid"}>
-      {list.map((song, index) => (
-        <div
-          key={song.id}
-          className={source === "playlist" ? "playlist-item" : "song-card"}
-        >
-          {source !== "playlist" && (
-            <img src={song.image} alt={song.title} className="song-image" />
-          )}
-          <div>
-            <h3>{song.title}</h3>
-            <p>{song.artist}</p>
-            <p>{song.genre}</p>
+      {list.map((song, index) => {
+        const isCurrent = currentSong && currentSong.id === song.id;
+        return (
+          <div
+            key={song.id}
+            className={source === "playlist" ? "playlist-item" : "song-card"}
+          >
+            {source !== "playlist" && (
+              <img src={song.image} alt={song.title} className="song-image" />
+            )}
+            <div>
+              <h3>{song.title}</h3>
+              <p>{song.artist}</p>
+              <p>{song.genre}</p>
+            </div>
+            <div className="card-buttons">
+              <button
+                onClick={() =>
+                  isCurrent ? togglePlayPause() : playSong(list, index)
+                }
+              >
+                {isCurrent && isPlaying ? "⏸" : "▶"}
+              </button>
+              <button
+                className={
+                  playlist.find((s) => s.id === song.id) ? "remove-btn" : "add-btn"
+                }
+                onClick={() => togglePlaylist(song)}
+              >
+                {playlist.find((s) => s.id === song.id) ? "Remove" : "Add"}
+              </button>
+            </div>
           </div>
-          <div className="card-buttons">
-            <button onClick={() => playSong(list, index)}>▶</button>
-            <button
-              className={
-                playlist.find((s) => s.id === song.id) ? "remove-btn" : "add-btn"
-              }
-              onClick={() => togglePlaylist(song)}
-            >
-              {playlist.find((s) => s.id === song.id) ? "Remove" : " Add"}
-            </button>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 
@@ -216,24 +260,46 @@ function App() {
     <div className="app">
       {/* Sidebar */}
       <div className="sidebar">
-        <b>
-          <center><h2><b>Music Player</b></h2></center>
-          <center><hr></hr></center>
-          
-          <ul className="sidebar-menu">
-            <li onClick={() => setActivePage("home")}>Home</li>
-            <li onClick={() => setActivePage("library")}> Your Library</li>
-            <li onClick={() => setActivePage("playlist")}> Playlist</li>
-            <li onClick={() => setActivePage("search")}>Search</li>
-          </ul>
-        </b>
+        <center>
+          <h2>
+            <b>Music Player</b>
+          </h2>
+        </center>
+        <center>
+          <hr />
+        </center>
+
+        <ul className="sidebar-menu">
+          <li
+            className={activePage === "home" ? "active" : ""}
+            onClick={() => setActivePage("home")}
+          >
+            Home
+          </li>
+          <li
+            className={activePage === "library" ? "active" : ""}
+            onClick={() => setActivePage("library")}
+          >
+            Your Library
+          </li>
+          <li
+            className={activePage === "playlist" ? "active" : ""}
+            onClick={() => setActivePage("playlist")}
+          >
+            Playlist
+          </li>
+          <li
+            className={activePage === "search" ? "active" : ""}
+            onClick={() => setActivePage("search")}
+          >
+            Search
+          </li>
+        </ul>
       </div>
 
       {/* Main Content */}
       <div className="main-content">
-        {/* Search Section */}
         <div className="search-section">
-          
           <input
             type="text"
             placeholder="Search local + online..."
@@ -242,7 +308,6 @@ function App() {
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyPress}
           />
-          
           <button onClick={handleSearch}>Search</button>
           {recentSearches.length > 0 && (
             <div className="recent-searches">
@@ -263,7 +328,7 @@ function App() {
 
         {activePage === "home" && (
           <>
-            <h2>Featured Songs</h2>
+            <h2>Famous Tamil Love BGMs</h2>
             {renderSongs(songs, "home")}
           </>
         )}
@@ -285,19 +350,14 @@ function App() {
         {activePage === "library" && (
           <>
             <h2>Your Library</h2>
-            <input
-              type="file"
-              multiple
-              accept="audio/*"
-              onChange={handleFileUpload}
-            />
+            <input type="file" multiple accept="audio/*" onChange={handleFileUpload} />
             {renderSongs(librarySongs, "library")}
           </>
         )}
       </div>
 
-      {/* Bottom Player - only show when playing */}
-      {currentSong && isPlaying && (
+      {/* Bottom Player */}
+      {currentSong && (
         <div className="bottom-player">
           <img src={currentSong.image} alt="cover" />
           <div className="song-info">
@@ -306,22 +366,13 @@ function App() {
           </div>
           <div className="controls">
             <button onClick={playPrevious}>⏮</button>
-            <button onClick={togglePlayPause}>
-              {isPlaying ? "⏸" : "▶"}
-            </button>
+            <button onClick={togglePlayPause}>{isPlaying ? "⏸" : "▶"}</button>
             <button onClick={playNext}>⏭</button>
           </div>
 
-          {/* Progress with Time */}
           <div className="progress-container">
             <span>{formatTime(currentTime)}</span>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={progress}
-              onChange={handleSeek}
-            />
+            <input type="range" min="0" max="100" value={progress} onChange={handleSeek} />
             <span>{formatTime(duration)}</span>
           </div>
 
@@ -335,12 +386,7 @@ function App() {
               onChange={handleVolumeChange}
             />
           </div>
-          <audio
-            ref={audioRef}
-            src={currentSong.audio}
-            autoPlay={isPlaying}
-            onEnded={playNext}
-          />
+          <audio ref={audioRef} src={currentSong.audio} onEnded={playNext} />
         </div>
       )}
     </div>
